@@ -24,10 +24,9 @@ pip install xformers==0.0.28.post3 --extra-index-url https://download.pytorch.or
 
 # Step 3: Install precompiled Flash Attention wheel (cu121, torch2.5, py310)
 
-WHEEL_URL="https://github.com/Dao-AILab/flash-attention/releases/download/v2.5.9.post1/flash_attn-2.5.9.post1+cu121torch2.5cxx11abiFALSE-cp310-cp310-linux_x86_64.whl"
-
-echo "🌐 Downloading Flash Attention wheel from: $WHEEL_URL"
-pip install "$WHEEL_URL"
+echo "⚡ Installing Flash Attention 2.8.0.post2 (precompiled cu12) ..."
+# Wheel compiled for Python 3.10, Torch 2.5.x, CUDA 12 (works with cu121)
+pip install https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.0.post2/flash_attn-2.8.0.post2%2Bcu12torch2.5cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
 
 echo "🔍 Verifying installation..."
 python - << 'PY'
