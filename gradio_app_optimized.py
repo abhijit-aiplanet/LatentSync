@@ -33,7 +33,14 @@ try:
     print("✅ Flash Attention available")
 except ImportError:
     FLASH_ATTN_AVAILABLE = False
-    print("⚠️ Flash Attention not available")
+    print("⚠️ Flash Attention not available - using XFormers (still fast!)")
+
+# Optimization level detection
+optimization_level = "🔥 MAXIMUM" if (XFORMERS_AVAILABLE and FLASH_ATTN_AVAILABLE) else \
+                   "⚡ HIGH" if XFORMERS_AVAILABLE else \
+                   "🛡️ BASIC"
+                   
+print(f"🎯 Optimization Level: {optimization_level}")
 
 # A100 optimized configurations
 CONFIG_PATH = Path("configs/unet/stage2_512.yaml")
@@ -184,8 +191,7 @@ def get_gpu_info():
     if torch.cuda.is_available():
         gpu_name = torch.cuda.get_device_name(0)
         gpu_memory = torch.cuda.get_device_properties(0).total_memory / 1e9
-        gpu_util = f"🔥 Optimized for maximum performance"
-        return f"🚀 {gpu_name} ({gpu_memory:.1f}GB) - {gpu_util}"
+        return f"🚀 {gpu_name} ({gpu_memory:.1f}GB) - {optimization_level}"
     return "❌ No GPU detected"
 
 
