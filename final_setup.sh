@@ -2,6 +2,7 @@
 
 # LatentSync Final Setup Script - Nuclear Option
 # This script completely wipes and reinstalls everything for maximum performance
+# Uses exact versions from requirements.txt and requirements_a100.txt
 
 set -e  # Exit on any error
 
@@ -27,120 +28,106 @@ source activate latentsync
 
 echo "✅ Fresh environment created!"
 
-# Step 3: Install CUDA-enabled PyTorch (latest stable)
-echo "🔥 Step 3: Installing optimized PyTorch with CUDA 11.8..."
-pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118
+# Step 3: Install CUDA-enabled PyTorch (from requirements.txt - CUDA 12.1)
+echo "🔥 Step 3: Installing optimized PyTorch with CUDA 12.1..."
+pip install torch==2.5.1 torchvision==0.20.1 --extra-index-url https://download.pytorch.org/whl/cu121
 
 echo "✅ PyTorch installed!"
 
-# Step 4: Install XFormers for memory optimization
-echo "⚡ Step 4: Installing XFormers for memory optimization..."
-pip install xformers==0.0.22.post7 --index-url https://download.pytorch.org/whl/cu118
+# Step 4: Install core requirements from requirements.txt
+echo "📦 Step 4: Installing core requirements from requirements.txt..."
+pip install diffusers==0.32.2
+pip install transformers==4.48.0
+pip install decord==0.6.0
+pip install accelerate==0.26.1
+pip install einops==0.7.0
+pip install omegaconf==2.3.0
+pip install numpy==1.26.4
 
-echo "✅ XFormers installed!"
+echo "✅ Core requirements installed!"
 
-# Step 5: Install Flash Attention for speed
-echo "🚀 Step 5: Installing Flash Attention for maximum speed..."
-pip install packaging ninja
-pip install flash-attn==2.3.3 --no-build-isolation
-
-echo "✅ Flash Attention installed!"
-
-# Step 6: Install core AI/ML packages with specific versions
-echo "🧠 Step 6: Installing core AI/ML packages..."
-pip install numpy==1.24.3
-pip install scipy==1.11.3
-pip install scikit-learn==1.3.0
-pip install pillow==10.0.1
-pip install matplotlib==3.7.2
-
-echo "✅ Core packages installed!"
-
-# Step 7: Install computer vision packages
-echo "👁️ Step 7: Installing computer vision packages..."
-pip install opencv-contrib-python==4.8.1.78
+# Step 5: Install computer vision packages
+echo "👁️ Step 5: Installing computer vision packages..."
+pip install opencv-python==4.9.0.80
+pip install mediapipe==0.10.11
+pip install face-alignment==1.4.1
 pip install insightface==0.7.3
-pip install face-alignment==1.3.5
-pip install albumentations==1.3.1
+pip install kornia==0.8.0
 
 echo "✅ Computer vision packages installed!"
 
-# Step 8: Install audio processing packages
-echo "🎵 Step 8: Installing audio processing packages..."
+# Step 6: Install audio processing packages
+echo "🎵 Step 6: Installing audio processing packages..."
 pip install librosa==0.10.1
-pip install soundfile==0.12.1
-pip install torchaudio==2.1.0
+pip install python_speech_features==0.6
 
 echo "✅ Audio packages installed!"
 
-# Step 9: Install ONNX for model optimization
-echo "🔧 Step 9: Installing ONNX for model optimization..."
-pip install onnx==1.14.1
-pip install onnxruntime-gpu==1.16.1
-
-echo "✅ ONNX packages installed!"
-
-# Step 10: Install video processing packages
-echo "🎬 Step 10: Installing video processing packages..."
-pip install moviepy==1.0.3
-pip install decord==0.6.0
-pip install av==10.0.0
+# Step 7: Install video processing packages
+echo "🎬 Step 7: Installing video processing packages..."
+pip install scenedetect==0.6.1
+pip install ffmpeg-python==0.2.0
+pip install imageio==2.31.1
+pip install imageio-ffmpeg==0.5.1
 
 echo "✅ Video packages installed!"
 
-# Step 11: Install deep learning utilities
-echo "🔧 Step 11: Installing deep learning utilities..."
-pip install timm==0.9.7
-pip install transformers==4.34.0
-pip install diffusers==0.21.4
-pip install accelerate==0.23.0
+# Step 8: Install ONNX for model optimization
+echo "🔧 Step 8: Installing ONNX for model optimization..."
+pip install onnxruntime-gpu==1.21.0
 
-echo "✅ Deep learning utilities installed!"
+echo "✅ ONNX packages installed!"
 
-# Step 12: Install web interface packages
-echo "🌐 Step 12: Installing web interface packages..."
-pip install gradio==3.50.2
-pip install fastapi==0.104.1
-pip install uvicorn==0.24.0
+# Step 9: Install web interface packages
+echo "🌐 Step 9: Installing web interface packages..."
+pip install gradio==5.24.0
+pip install huggingface-hub==0.30.2
 
 echo "✅ Web interface packages installed!"
 
-# Step 13: Install development utilities
-echo "🛠️ Step 13: Installing development utilities..."
-pip install tqdm==4.66.1
-pip install rich==13.6.0
-pip install pydantic==2.4.2
-pip install omegaconf==2.3.0
-pip install tensorboard==2.14.1
-
-echo "✅ Development utilities installed!"
-
-# Step 14: Install remaining LatentSync specific dependencies
-echo "🎯 Step 14: Installing LatentSync specific dependencies..."
-pip install einops==0.7.0
-pip install kornia==0.7.0
+# Step 10: Install remaining LatentSync specific dependencies
+echo "🎯 Step 10: Installing LatentSync specific dependencies..."
 pip install lpips==0.1.4
-pip install cleanfid==0.1.35
+pip install DeepCache==0.1.1
 
 echo "✅ LatentSync dependencies installed!"
 
-# Step 15: Set optimal environment variables
-echo "⚙️ Step 15: Setting optimal environment variables..."
+# Step 11: Install A100 specific optimizations
+echo "⚡ Step 11: Installing A100 specific optimizations..."
+pip install packaging ninja
+pip install "xformers>=0.0.23"
+pip install "flash-attn>=2.0.0" --no-build-isolation
+pip install "triton>=2.0.0"
+
+echo "✅ A100 optimizations installed!"
+
+# Step 12: Install additional useful packages
+echo "🛠️ Step 12: Installing additional useful packages..."
+pip install tqdm
+pip install rich
+pip install soundfile
+pip install pillow
+pip install matplotlib
+
+echo "✅ Additional packages installed!"
+
+# Step 13: Set optimal environment variables
+echo "⚙️ Step 13: Setting optimal environment variables..."
 export CUDA_VISIBLE_DEVICES=0
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
 export TORCH_CUDNN_V8_API_ENABLED=1
-export XFORMERS_FORCE_DISABLE_TRITON=1
+export XFORMERS_FORCE_DISABLE_TRITON=0  # Enable Triton for A100
 
 # Make these permanent
 echo "export CUDA_VISIBLE_DEVICES=0" >> ~/.bashrc
 echo "export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128" >> ~/.bashrc
 echo "export TORCH_CUDNN_V8_API_ENABLED=1" >> ~/.bashrc
-echo "export XFORMERS_FORCE_DISABLE_TRITON=1" >> ~/.bashrc
+echo "export XFORMERS_FORCE_DISABLE_TRITON=0" >> ~/.bashrc
 
 echo "✅ Environment variables set!"
 
-# Step 16: Verify installation
-echo "🔍 Step 16: Verifying installation..."
+# Step 14: Verify installation
+echo "🔍 Step 14: Verifying installation..."
 python -c "
 import torch
 import xformers
@@ -149,12 +136,18 @@ import cv2
 import librosa
 import insightface
 import onnxruntime
+import diffusers
+import transformers
+import gradio
 print('🎉 ALL PACKAGES IMPORTED SUCCESSFULLY!')
 print(f'PyTorch version: {torch.__version__}')
 print(f'CUDA available: {torch.cuda.is_available()}')
 print(f'CUDA version: {torch.version.cuda}')
 print(f'XFormers version: {xformers.__version__}')
 print(f'Flash Attention available: {hasattr(flash_attn, \"flash_attn_func\")}')
+print(f'Diffusers version: {diffusers.__version__}')
+print(f'Transformers version: {transformers.__version__}')
+print(f'Gradio version: {gradio.__version__}')
 print(f'GPU count: {torch.cuda.device_count()}')
 if torch.cuda.is_available():
     print(f'GPU name: {torch.cuda.get_device_name(0)}')
